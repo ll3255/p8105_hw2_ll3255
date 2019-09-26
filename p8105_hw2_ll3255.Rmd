@@ -1,0 +1,61 @@
+---
+title: "Homework 2"
+author: "Laura Lynch"
+data: 2019-09-26
+output: github_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+# Problem 1
+Read and clean:
+```{r}
+```
+Read and clean precipitation data:
+```{r}
+```
+
+About this data:
+* number of observations in both resulting datasets 
+```{r}
+```
+* examples of key variables. For available data
+```{r}
+```
+* total precipitation in 2018
+```{r}
+```
+* median number of sports balls in a dumpster in 2017
+```{r}
+```
+
+# Problem 2
+Clean and tidy pols-month:
+```{r}
+```
+Clean and tidy snp:
+```{r}
+```
+Clean and tidy snp:
+```{r}
+```
+Merge the three datasets:
+```{r}
+```
+About this data:
+* Write a short paragraph about these datasets. Explain briefly 
+* what each dataset contained
+* describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables)
+
+# Problem 3
+Load and tidy data:
+```{r}
+```
+Make a table:
+```{r}
+```
+Make a scatterplot:
+```{r}
+```
