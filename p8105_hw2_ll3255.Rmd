@@ -29,6 +29,26 @@ trash_data
 
 Read and clean precipitation data:
 ```{r}
+rain_2018 = 
+  readxl::read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+    sheet = "2018 Precipitation", skip = 1, col_names = TRUE) %>%
+  drop_na(total) %>%
+  mutate(year = 2018)
+
+rain_2018
+
+rain_2017 = 
+  readxl::read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+    sheet = "2017 Precipitation")
+  drop_na(data = ., total) %>%
+  mutate(.data, year = 2017)
+
+rain_tidy = 
+  bind_cols(rain_2017, rain_2018) %>%
+  janitor::clean_names() %>%
+  pivot_longer(everything()) %>% 
+  select(year, month, total) 
+
 ```
 
 About this data:
