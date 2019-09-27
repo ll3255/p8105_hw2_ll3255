@@ -7,12 +7,26 @@ output: github_document
 
 ```{r setup, include = FALSE}
 library(tidyverse)
+library(dplyr)
+library(readxl)
 ```
 
 # Problem 1
-Read and clean:
+Read and clean Mr. Trashwheel:
 ```{r}
+trash_data = 
+  read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = cell_cols("A:N")
+    ) %>% 
+  janitor::clean_names(dat = .) %>% 
+  drop_na(data = ., dumpster) %>% 
+  mutate(dat = ., 
+         round(sports_balls, 0),
+        as.integer(sports_ball))
+trash_data
 ```
+
 Read and clean precipitation data:
 ```{r}
 ```
