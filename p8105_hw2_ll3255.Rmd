@@ -30,24 +30,26 @@ Read and clean precipitation data:
 rain_2018 = 
   readxl::read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
     sheet = "2018 Precipitation", skip = 1, col_names = TRUE) %>%
-  drop_na(total) %>%
+  drop_na(Total, Month) %>%
   mutate(year = 2018)
 
 rain_2017 = 
   readxl::read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-    sheet = "2017 Precipitation")
-  drop_na(data = ., total) %>%
-  mutate(.data, year = 2017)
+    sheet = "2017 Precipitation", skip = 1, col_names = TRUE) %>%
+  mutate(year = 2017)
 
 rain_tidy = 
-  bind_cols(rain_2017, rain_2018) %>%
+  bind_rows(rain_2018, rain_2017) %>%
   janitor::clean_names() %>%
-  pivot_longer(everything()) %>% 
   select(year, month, total) %>%
-  mutate(dat = ., as.character(month))
-
+  mutate(.data = .,  
+         as.character(month))
 ```
-
+  drop_na(total) %>%
+  pivot_longer(everything()) %>% 
+  
+  
+  
 About this data:
 * number of observations in both resulting datasets 
 The Mr. Trashwheel dataset has collected XX observations about XX dumpsters.
