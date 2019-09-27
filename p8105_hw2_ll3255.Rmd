@@ -24,7 +24,6 @@ trash_data =
   mutate(dat = ., 
          round(sports_balls, 0),
         as.integer(sports_ball))
-trash_data
 ```
 
 Read and clean precipitation data:
@@ -34,8 +33,6 @@ rain_2018 =
     sheet = "2018 Precipitation", skip = 1, col_names = TRUE) %>%
   drop_na(total) %>%
   mutate(year = 2018)
-
-rain_2018
 
 rain_2017 = 
   readxl::read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
@@ -47,33 +44,42 @@ rain_tidy =
   bind_cols(rain_2017, rain_2018) %>%
   janitor::clean_names() %>%
   pivot_longer(everything()) %>% 
-  select(year, month, total) 
+  select(year, month, total) %>%
+  mutate(dat = ., as.character(month))
 
 ```
 
 About this data:
 * number of observations in both resulting datasets 
-```{r}
-```
+The Mr. Trashwheel dataset has collected XX observations about XX dumpsters.
+The Precipitation data HAS MONTHLY PRECIPITATION MEASURES OVER THE COURSE OF 2 YEARS.
+
 * examples of key variables. For available data
-```{r}
-```
-* total precipitation in 2018
-```{r}
-```
+For Mr. Trashwheel
 * median number of sports balls in a dumpster in 2017
-```{r}
-```
+For the precipitation data
+* total precipitation in 2018
+
+
 
 # Problem 2
 Clean and tidy pols-month:
 ```{r}
+pols_month = readr::read_csv("data/pols-month.csv")
+
+View(pols_month)
 ```
 Clean and tidy snp:
 ```{r}
+snp = readr::read_csv("data/snp.csv")
+
+View(snp)
 ```
-Clean and tidy snp:
+Clean and tidy unemployment:
 ```{r}
+unemployment = readr::read_csv("data/unemployment.csv")
+
+View(unemployment)
 ```
 Merge the three datasets:
 ```{r}
@@ -86,6 +92,9 @@ About this data:
 # Problem 3
 Load and tidy data:
 ```{r}
+baby_names = readr::read_csv("data/Popular_Baby_Names.csv")
+
+View(baby_names)
 ```
 Make a table:
 ```{r}
