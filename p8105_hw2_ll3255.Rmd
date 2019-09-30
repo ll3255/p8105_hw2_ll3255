@@ -62,11 +62,12 @@ For the precipitation data
 Clean and tidy pols-month:
 ```{r}
 pols_month = readr::read_csv("data/pols-month.csv") %>%
-      separate(mon, into = c("year", "month", "day"), sep = "-") %>%
-      month = month.abb[mon]
-
-View(pols_month)
+  separate(mon, into = c("year", "month", "day"), sep = "-") %>%
+  mutate(month = as.numeric(month), month = factor(month.name[month])) %>%
+  mutate(president = ifelse(prez_gop == 1, c("gop"), c("dem"))) %>%
+  select(-prez_dem, -prez_gop, -day)
 ```
+
 Clean and tidy snp:
 ```{r}
 snp = readr::read_csv("data/snp.csv")
