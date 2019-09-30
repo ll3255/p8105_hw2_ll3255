@@ -42,14 +42,9 @@ rain_tidy =
   bind_rows(rain_2018, rain_2017) %>%
   janitor::clean_names() %>%
   select(year, month, total) %>%
-  mutate(.data = .,  
-         as.character(month))
+  mutate(month = as.character(month))
 ```
-  drop_na(total) %>%
-  pivot_longer(everything()) %>% 
-  
-  
-  
+
 About this data:
 * number of observations in both resulting datasets 
 The Mr. Trashwheel dataset has collected XX observations about XX dumpsters.
@@ -66,7 +61,9 @@ For the precipitation data
 # Problem 2
 Clean and tidy pols-month:
 ```{r}
-pols_month = readr::read_csv("data/pols-month.csv")
+pols_month = readr::read_csv("data/pols-month.csv") %>%
+      separate(mon, into = c("year", "month", "day"), sep = "-") %>%
+      month = month.abb[mon]
 
 View(pols_month)
 ```
