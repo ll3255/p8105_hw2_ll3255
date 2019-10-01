@@ -10,7 +10,7 @@ library(tidyverse)
 library(dplyr)
 ```
 
-# Problem 1
+# Problem 1 --> CHANGE DATA UPLOADED TO 2019 VERSION
 Read and clean Mr. Trashwheel:
 ```{r}
 trash_data = 
@@ -82,18 +82,19 @@ Clean and tidy unemployment:
 ```{r}
 unemployment = readr::read_csv("data/unemployment.csv") %>%
   janitor::clean_names() %>%
-  unemployment =  pivot_longer(
-    data = unemployment,
+  pivot_longer(
     cols = jan:dec, 
     names_to = "month", 
     values_to = "percent_unemploy") %>%
-    mutate (month = as.numeric(month)) %>%
-    mutate (month =as.factor(month.name["month"]) %>%
+    mutate(year = as.character(year)) %>%
     select(year, month) 
 
-# 
-# line 90 & month is ? here and character variable elsewhere
+
 ```
+mutate (month = as.numeric(month)) %>%
+  #NAs introduced by coersion, trying to put full month
+    mutate (month =as.factor(month.name["month"]) %>%
+
 Merge the three datasets:
 ```{r}
 # merge snp into pols
@@ -112,13 +113,18 @@ About this data:
 Load and tidy data:
 ```{r}
 baby_names = readr::read_csv("data/Popular_Baby_Names.csv") %>%
-  mutate(childs_first_name = str_to_lower("childs_first_name")) %>%
-  distinct(.data, .keep_all = FALSE) 
+  janitor::clean_names() %>%
+  str_to_lower(childs_first_name) %>%
 
+  distinct(.data, .keep_all = FALSE) 
 ```
 Make a table:
 ```{r}
-
+gather(
+  table4a, 
+  `1999`, `2000`,
+  key = "year", 
+  value = "cases")
 ```
 Make a scatterplot:
 ```{r}
