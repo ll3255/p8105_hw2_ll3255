@@ -118,15 +118,15 @@ baby_names = readr::read_csv("data/Popular_Baby_Names.csv") %>%
          name = childs_first_name, 
          everything()) %>%
   mutate(name = str_to_lower(name)) %>%
- # rename(
- #        "ASIAN AND PACIFIC ISLANDER", "ASIAN AND PACI", 
- #        "BLACK NON HISPANIC" = "BLACK NON HISP", 
- #        "WHITE NON HISPANIC" = "WHITE NON HISP"
- #        ) %>%
-  
+  mutate(ethnicity = recode(ethnicity, 
+         "ASIAN AND PACI" = "ASIAN AND PACIFIC ISLANDER",
+         "BLACK NON HISP" = "BLACK NON HISPANIC", 
+         "WHITE NON HISP" = "WHITE NON HISPANIC" 
+         )) %>%
   distinct(name, year, ethnicity, .keep_all = TRUE)
-
 ```
+
+
 Olivia's Table:
 ```{r}
 baby_names %>% 
@@ -137,17 +137,23 @@ baby_names %>%
    names_from = "year", 
    values_from = "rank") %>%
   knitr::kable() 
-
-
 ```
 Boy's Table:
 ```{r}
-
+baby_names %>% 
+  filter(gender == "MALE") %>%
+  select(-rank) %>%
+  group_by(ethnicity) %>%
+  pivot_wider(
+   names_from = "year", 
+   values_from = "count") %>%
+   knitr::kable() 
 ```
 
 Make a scatterplot:
-```
-
 ```{r}
-
+baby_names %>%
+  filter(gender == "MALE", year == 2016, ethnicity == "WHITE NON HISPANIC") %>%
+  ggplot(aes(x = rank, y = count)) + geom_point()
 ```
+, gender == "WHITE NON HISPANIC"
