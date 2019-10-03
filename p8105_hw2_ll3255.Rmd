@@ -23,6 +23,7 @@ trash_data =
   mutate(.data = ., 
         sports_balls = round(0),
         sports_balls_int = as.integer(sports_balls))
+# trash_data
 ```
 
 Read and clean precipitation data:
@@ -33,7 +34,6 @@ rain_2018 =
     janitor::clean_names() %>%
   drop_na(total, month) %>%
   mutate(year = 2018)
-rain_2018
 
 rain_2017 = 
   readxl::read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
@@ -41,50 +41,47 @@ rain_2017 =
     janitor::clean_names() %>%
   drop_na(total, month) %>%
   mutate(year = 2017)
-rain_2017
 
 rain_tidy = 
   bind_rows(rain_2018, rain_2017) %>%
   mutate(month = as.numeric(month), month = month.name[month]) %>%
   janitor::clean_names() %>%
   select(year, month, total) 
-rain_tidy
-
 ```
-About this data:
-* number of observations in both resulting datasets 
-The Mr. Trashwheel dataset has collected XX observations about XX dumpsters.
-The Precipitation data HAS MONTHLY PRECIPITATION MEASURES OVER THE COURSE OF 2 YEARS.
+About the data:
 
-* examples of key variables. For available data
-For Mr. Trashwheel
-* median number of sports balls in a dumpster in 2017
-For the precipitation data
-* total precipitation in 2018
+ * The Mr. Trashwheel is collected from `r nrow(trash_data)` dumpsters
+    * Measurements are collected for `r ncol(trash_data)` types of debris pulled from the ocean
+        * For example the median number of sports balls removed was `r median(pull(trash_data, sports_balls_int))`
+        * And a median of `r median(pull(trash_data, grocery_bags))` grocery bags
+    * In total `r median(pull(trash_data, weight_tons))` tons of garbage was removed in 2014!
 
+ * The 2017-2018 precipitation data has `r nrow(rain_tidy)` observations
+    * The total precipitation for 2017 was `r sum(pull(rain_2017, total))`
+    * The total precipitation for 2018 was `r sum(pull(rain_2018, total))`
 
 
 # Problem 2
 Clean and tidy pols-month:
 ```{r}
 pols_month = readr::read_csv("data/pols-month.csv") %>%
+  janitor::clean_names() %>%
   separate(mon, into = c("year", "month", "day"), sep = "-", convert = TRUE) %>%
   mutate(month = month.abb[month]) %>%
   mutate(president = ifelse(prez_gop == 1, c("gop"), c("dem"))) %>%
   select(-prez_dem, -prez_gop, -day) %>%
   arrange(year, month)
-pols_month
 ```
-  mutate(month = as.numeric(month), month = factor(month.name[month])) %>%
+  
 
 Clean and tidy snp:
 ```{r}
 snp = readr::read_csv("data/snp.csv") %>%
+  janitor::clean_names() %>%
   separate(date, into = c("day", "month", "year"), sep = "/", convert = TRUE) %>%
   mutate(month = month.abb[month]) %>%
   select(-day) %>%
   select(year, month, close)
-snp
 ```
 Clean and tidy unemployment:
 ```{r}
@@ -95,14 +92,7 @@ unemployment = readr::read_csv("data/unemployment.csv") %>%
     names_to = "month", 
     values_to = "percent_unemploy") %>%
     select(year, month) 
-unemployment
 ```
-        mutate(month = as.numeric(month), month = factor(month.name[month])) %>%
-    mutate(month = month.name(month)) %>%
-month = month.abb(month), 
-mutate (month = as.numeric(month)) %>%
-  #NAs introduced by coersion, trying to put full month
-    mutate (month =as.factor(month.name["month"]) %>%
 
 Merge the three datasets:
 ```{r}
@@ -115,10 +105,11 @@ full_merge =
   left_join(merge_1, unemployment, c("year", "month"))
 full_merge
 ```
-About this data:
-* Write a short paragraph about these datasets. Explain briefly 
-* what each dataset contained
-* describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables)
+
+The"pols_month" dataset tracks the political affiliations of national leaders monthly including president, senators and governers for a total of `r nrow(pols_month)` months. The "snp" dataset tracks the closing values of the Standard & Poors stock for a total of  `r range(pull(snp, year))` years. Finally, the "unemployment" dataset tracks the percentage unemployment by month from `r smallest(pull(unemployment, year))` to `r largest(pull(unemployment, year))`.
+
+Once merged, these data represent `r nrow(full_merge))` observations and `r ncol(full_merge)` variables. The data collected span a total of `r range(pull(full_merge, year))` years. It is possible to see how many democrats and republicans hold high office, including the political affiliation of the president, and a break down of S&P closing values by month. For example, in 1947, there was a `r pull(full_merge, president)` president, `r pull(full_merge, year == 1947, gov_gop)` democratic governors and `r pull(full_merge, year == 1947, gov_dem)` republican governors that year and the average S&P closing value was `r avg(pull(full_merge, year == 1947, close))`.
+
 
 # Problem 3
 Load and tidy data:
