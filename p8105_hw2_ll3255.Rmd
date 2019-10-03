@@ -16,14 +16,13 @@ Read and clean Mr. Trashwheel:
 trash_data = 
   readxl::read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
     sheet = "Mr. Trash Wheel",
-    range = "A2:N52"
+    range = "A2:N338",
     ) %>% 
   janitor::clean_names(dat = .) %>% 
   drop_na(data = ., dumpster) %>% 
-  mutate(.data = ., 
-        sports_balls = round(0),
-        sports_balls_int = as.integer(sports_balls))
-# trash_data
+  mutate( 
+        sports_balls = as.integer(sports_balls, round, 0)
+        )
 ```
 
 Read and clean precipitation data:
@@ -52,13 +51,13 @@ About the data:
 
  * The Mr. Trashwheel is collected from `r nrow(trash_data)` dumpsters
     * Measurements are collected for `r ncol(trash_data)` types of debris pulled from the ocean
-        * For example the median number of sports balls removed was `r median(pull(trash_data, sports_balls_int))`
+        * For example the median number of sports balls removed was `r median(pull(trash_data, sports_balls))`
         * And a median of `r median(pull(trash_data, grocery_bags))` grocery bags
-    * In total `r median(pull(trash_data, weight_tons))` tons of garbage was removed in 2014!
+    * In total `r median(pull(trash_data, weight_tons))` tons of garbage was removed since 2014!
 
  * The 2017-2018 precipitation data has `r nrow(rain_tidy)` observations
-    * The total precipitation for 2017 was `r sum(pull(rain_2017, total))`
-    * The total precipitation for 2018 was `r sum(pull(rain_2018, total))`
+    * The total precipitation for 2017 was `r sum(pull(rain_2017, total))` inches
+    * The total precipitation for 2018 was `r sum(pull(rain_2018, total))` inches
 
 
 # Problem 2
@@ -99,16 +98,14 @@ Merge the three datasets:
 # merge snp into pols
 merge_1 = 
   left_join(pols_month, snp, by = c("year", "month"))
-merge_1
 # merge unemployment into merge_1
 full_merge = 
   left_join(merge_1, unemployment, c("year", "month"))
-full_merge
 ```
 
-The"pols_month" dataset tracks the political affiliations of national leaders monthly including president, senators and governers for a total of `r nrow(pols_month)` months. The "snp" dataset tracks the closing values of the Standard & Poors stock for a total of  `r range(pull(snp, year))` years. Finally, the "unemployment" dataset tracks the percentage unemployment by month from `r smallest(pull(unemployment, year))` to `r largest(pull(unemployment, year))`.
+The"pols_month" dataset tracks the political affiliations of national leaders monthly including president, senators and governers for a total of `r nrow(pols_month)` months. The "snp" dataset tracks the closing values of the Standard & Poors stock from  `r min(pull(snp, year))` to `r max(pull(snp, year))`. Finally, the "unemployment" dataset tracks the percentage unemployment by month from `r min(pull(unemployment, year))` to `r max(pull(unemployment, year))`.
 
-Once merged, these data represent `r nrow(full_merge))` observations and `r ncol(full_merge)` variables. The data collected span a total of `r range(pull(full_merge, year))` years. It is possible to see how many democrats and republicans hold high office, including the political affiliation of the president, and a break down of S&P closing values by month. For example, in 1947, there was a `r pull(full_merge, president)` president, `r pull(full_merge, year == 1947, gov_gop)` democratic governors and `r pull(full_merge, year == 1947, gov_dem)` republican governors that year and the average S&P closing value was `r avg(pull(full_merge, year == 1947, close))`.
+Once merged, these data represent `r nrow(full_merge)` observations and `r ncol(full_merge)` variables. The data collected range frorm `r min(pull(full_merge, year))` to `r max(pull(full_merge, year))`. It is possible to see how many democrats and republicans hold high office, including the political affiliation of the president, and a break down of S&P closing values by month. 
 
 
 # Problem 3
@@ -127,7 +124,6 @@ baby_names = readr::read_csv("data/Popular_Baby_Names.csv") %>%
          )) %>%
   distinct(name, year, ethnicity, .keep_all = TRUE)
 ```
-
 
 Olivia's Table:
 ```{r}
@@ -156,6 +152,11 @@ Make a scatterplot:
 ```{r}
 baby_names %>%
   filter(gender == "MALE", year == 2016, ethnicity == "WHITE NON HISPANIC") %>%
-  ggplot(aes(x = rank, y = count)) + geom_point()
+  ggplot(aes(x = rank, y = count)) + geom_point() + 
+  labs(
+    title = "NYC Baby Names",
+    x = "Popularity Ranking",
+    y = "Number of Babies",
+    caption = "Data from NYC OpenData, Popular Baby Names"
+  )
 ```
-, gender == "WHITE NON HISPANIC"
