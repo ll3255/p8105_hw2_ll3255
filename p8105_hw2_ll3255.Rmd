@@ -12,7 +12,6 @@ library(dplyr)
 
 # Problem 1 
 Read and clean Mr. Trashwheel:
-data/~$HealthyHarborWaterWheelTotals2018-7-28.xlsx
 
 ```{r, warning = FALSE}
 trash_data = 
